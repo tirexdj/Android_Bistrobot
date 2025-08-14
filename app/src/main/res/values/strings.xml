@@ -17,6 +17,12 @@
     <string name="description_text_2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eleifend tincidunt rhoncus.</string>
     <string name="description_text_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eleifend tincidunt rhoncus.</string>
     <string name="login_button_text">Login</string>
+    <string name="restaurant_code">Code restaurant</string>
+    <string name="identifier">Identifiant</string>
+    <string name="pin_code">Code pin</string>
+    <string name="please_enter_restaurant_code">Please enter restaurant code</string>
+    <string name="please_enter_identifier">Please enter identifier</string>
+    <string name="please_enter_pin">Please enter PIN</string>
     <string name="sign_up_button_text">Sign Up</string>
     <string name="please_enter_email">Please enter email</string>
     <string name="valid_email">Please enter valid email</string>

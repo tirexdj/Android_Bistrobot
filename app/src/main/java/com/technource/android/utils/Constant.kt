@@ -8,6 +8,7 @@ class Constants {
         const val LANGUAGE_CODE = "language_code"
         const val IS_INTRO_SCREEN_DONE = "is_intro_screen_done"
         const val IS_LOGGED_IN = "is_logged_in"
+        const val AUTH_TOKEN = "auth_token"
         const val GIT_REPO_LINK = "https://github.com/TechnourceOfficial/Android-Kotlin-Boilarplate"
         const val ABOUT_US_LINK = "https://www.technource.com/services/"
         const val TERMS_CONDITION_LINK = "https://www.technource.com/terms-conditions/"

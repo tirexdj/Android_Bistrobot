@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url "https://jitpack.io" }
     }
 }
-rootProject.name = "Android-Kotlin-Boilerplate"
+rootProject.name = "Android-Kotlin-BistroBot"
 include ':app'

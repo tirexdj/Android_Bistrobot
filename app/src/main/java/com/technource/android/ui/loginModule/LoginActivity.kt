@@ -1,8 +1,8 @@
 package com.technource.android.ui.loginModule
 
 import android.content.Intent
+import androidx.activity.viewModels
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import com.example.android_kotlin_boilerplate.R
 import com.example.android_kotlin_boilerplate.databinding.ActivityLoginBinding
 import com.technource.android.base.BaseActivity
@@ -14,17 +14,16 @@ import com.technource.android.utils.ValidationStatus
 import com.technource.android.utils.getErrorMessage
 import com.technource.android.utils.validateEmail
 import com.technource.android.utils.validatePassword
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(), LoginNavigator {
     override fun getViewBinding() = ActivityLoginBinding.inflate(layoutInflater)
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
     private lateinit var preference: PreferencesHelperImpl
     override fun initObj() {
         // Initialize PreferencesHelperImpl instance
         preference = PreferencesHelperImpl(this)
-
-        // Initialize LoginViewModel instance
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
         // Set viewModel and lifecycle owner for data binding
         binding.viewModel = viewModel

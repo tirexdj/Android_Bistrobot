@@ -16,5 +16,10 @@ enum class ValidationStatus {
     EMPTY_USERNAME,
     EMPTY_HOME_ADDRESS,
     EMPTY_OFFICE_ADDRESS,
-    EMPTY_MOBILENO
+    EMPTY_MOBILENO,
+
+    // For tablet login
+    EMPTY_RESTAURANT_CODE,
+    EMPTY_IDENTIFIER,
+    EMPTY_PIN
 }

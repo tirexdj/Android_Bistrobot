@@ -1,4 +1,4 @@
-#  Welcome to Android Kotlin Boilerplate!
+#  Welcome to Android Kotlin BistroBot!
 
 This repository provides a boilerplate codebase for developing Android applications using Kotlin. It aims to provide a starting point with preconfigured project structure, common libraries, and best practices to kickstart your Android development process.
 
@@ -48,7 +48,7 @@ Install Android Studio : Android Studio Dolphin | 2021.3.1 Patch 1
 
 # Clone Project :
 
-git clone https://github.com/TechnourceOfficial/Android_Kotlin_Boilerplate
+git clone https://github.com/TechnourceOfficial/Android_Kotlin_BistroBot
 After cloning the project, you can open it in Android Studio by following these steps:
 1.  Open Android Studio.
 2.  Select "Open an existing Android Studio project" from the welcome screen.
@@ -150,7 +150,7 @@ And these ones for production purposes:
 
 ## Application Preview
 
-https://github.com/TechnourceOfficial/Android_Kotlin_Boilerplate/assets/70566076/5d14c036-2291-4c57-a902-ac20892f3194
+https://github.com/TechnourceOfficial/Android_Kotlin_BistroBot/assets/70566076/5d14c036-2291-4c57-a902-ac20892f3194
 
 ## License
 
