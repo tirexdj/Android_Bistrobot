@@ -1,0 +1,411 @@
+/**
+ * @file device_api.ts
+ * @description This file documents the API endpoints, data models, and types for interacting with devices (including tablets).
+ * It is intended to be used as a reference for client application development (e.g., Android).
+ *
+ * @version 1.0.0
+ * @date 2025-08-13
+ */
+
+// =================================================================================================
+// I. Core Data Interfaces
+// =================================================================================================
+
+/**
+ * Represents a physical device in the system.
+ * Based on the 'devices' table schema and the DeviceResource API transformation.
+ */
+export interface Device {
+  uuid: string;
+  device_identifier: string;
+  device_name: string | null;
+  device_model: string | null;
+  device_type: DeviceType;
+  status: DeviceStatus;
+  is_online: boolean; // Accessor: based on status and last_heartbeat
+  location: string | null;
+  capabilities: string[] | null;
+  last_heartbeat: string | null; // ISO 8601 format
+  registered_at: string; // ISO 8601 format
+  disconnected_at: string | null; // ISO 8601 format
+  disconnect_reason: string | null;
+  company_uuid: string;
+  assigned_table: {
+    uuid: string;
+    number: string;
+    name: string;
+  } | null;
+  active_session: DeviceSession | null;
+  timestamps: {
+    created_at: string; // ISO 8601 format
+    updated_at: string; // ISO 8601 format
+  };
+  // 'configuration' is a hidden field in the model but might be present in specific, authenticated responses.
+  configuration?: Record<string, any>;
+}
+
+/**
+ * Represents a session of a device being used.
+ * Based on the 'device_sessions' table schema.
+ */
+export interface DeviceSession {
+  uuid: string;
+  device_uuid: string;
+  operator_user_uuid: string | null;
+  session_token: string;
+  metadata: Record<string, any> | null;
+  started_at: string; // ISO 8601 format
+  ended_at: string | null; // ISO 8601 format
+  end_reason: string | null;
+  last_activity_at: string; // ISO 8601 format
+}
+
+/**
+ * Represents the assignment of a device to a restaurant table.
+ * Based on the 'device_table_assignments' table schema.
+ */
+export interface DeviceTableAssignment {
+  uuid: string;
+  device_uuid: string;
+  table_uuid: string;
+  assignment_type: 'permanent' | 'temporary' | 'session';
+  assigned_at: string; // ISO 8601 format
+  released_at: string | null; // ISO 8601 format
+  assigned_by_user_uuid: string | null;
+  configuration: Record<string, any> | null;
+}
+
+
+// =================================================================================================
+// II. Enums and Type Aliases
+// =================================================================================================
+
+export type DeviceType = 'tablet' | 'kiosk' | 'display' | 'printer' | 'pos';
+export type DeviceStatus = 'active' | 'inactive' | 'maintenance' | 'offline' | 'error';
+
+
+// =================================================================================================
+// III. API Request Payloads
+// =================================================================================================
+
+/**
+ * @description Payload for POST /api/v1/device/authenticate
+ */
+export interface AuthenticateDeviceRequest {
+  device_identifier: string;
+  device_code: string;
+  pin: string; // 4 digits
+  device_type: DeviceType;
+  capabilities?: string[];
+  location?: object; // e.g., { "lat": 48.8584, "lon": 2.2945 }
+}
+
+/**
+ * @description Payload for POST /api/v1/device/validate-connection
+ */
+export interface ValidateDeviceConnectionRequest {
+  device_identifier: string;
+  device_code: string;
+  pin: string; // 4 digits
+}
+
+/**
+ * @description Payload for PUT /api/v1/device/config
+ */
+export interface UpdateDeviceConfigRequest {
+  configuration: Record<string, any>;
+}
+
+/**
+ * @description Payload for POST /api/v1/devices/{device}/reset-pin
+ */
+export interface ResetDevicePinRequest {
+  new_pin: string; // 4 digits
+  confirm_pin: string; // must match new_pin
+}
+
+/**
+ * @description Payload for POST /api/v1/tablet/connect
+ */
+export interface ConnectTabletRequest {
+  company_code: string; // 4-10 chars, uppercase alphanumeric
+  tablet_code: string; // 4-15 chars, uppercase alphanumeric with dashes
+  pin: string; // 4-10 digits
+  device_info: {
+    screen_resolution?: string;
+    browser?: string;
+    os?: string;
+    user_agent?: string;
+    platform?: string;
+  };
+}
+
+/**
+ * @description Payload for POST /api/v1/tablet/validate
+ */
+export interface ValidateTabletConnectionRequest {
+  company_code: string;
+  tablet_code: string;
+  pin: string;
+}
+
+/**
+ * @description Payload for POST /api/v1/devices
+ */
+export interface CreateDeviceRequest {
+    device_identifier: string;
+    device_code: string;
+    device_type: DeviceType;
+    pin: string; // 4 digits
+    company_uuid: string;
+    name?: string;
+    location?: string;
+    configuration?: Record<string, any>;
+    capabilities?: string[];
+}
+
+
+// =================================================================================================
+// IV. API Response Payloads
+// =================================================================================================
+
+/**
+ * @description Generic successful response wrapper.
+ */
+export interface ApiResponse<T> {
+  success: true;
+  data: T;
+  message?: string;
+}
+
+/**
+ * @description Generic error response wrapper.
+ */
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+  errors?: Record<string, string[]>;
+}
+
+/**
+ * @description Response for successful device authentication.
+ */
+export type AuthenticateDeviceResponse = ApiResponse<{
+  device: Device;
+  token: string;
+  expires_at: string | null; // ISO 8601 format
+  abilities: string[];
+}>;
+
+/**
+ * @description Response for successful tablet authentication.
+ */
+export type ConnectTabletResponse = ApiResponse<{
+  tablet: Device; // A Device object where device_type is 'tablet'
+  token: string;
+  expires_at: string | null; // ISO 8601 format
+  company: {
+      uuid: string;
+      name: string;
+      code: string;
+      settings: Record<string, any>;
+  };
+}>;
+
+/**
+ * @description Response for a single device resource.
+ */
+export type DeviceResponse = ApiResponse<Device>;
+
+/**
+ * @description Response for a list of devices.
+ */
+export type DeviceListResponse = ApiResponse<Device[]> & {
+    // Pagination metadata would go here if applicable
+};
+
+
+// =================================================================================================
+// V. API Endpoint Documentation
+// =================================================================================================
+
+// -------------------------------------------------------------------------------------------------
+// A. Generic Device API (/api/v1/device/*, /api/v1/devices/*)
+// -------------------------------------------------------------------------------------------------
+
+/**
+ * == Endpoint: Generic Device Authentication ==
+ * @method POST
+ * @path /api/v1/device/authenticate
+ * @description Authenticates a generic device and returns a session token.
+ * @request AuthenticateDeviceRequest
+ * @response AuthenticateDeviceResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Validate Device Connection ==
+ * @method POST
+ * @path /api/v1/device/validate-connection
+ * @description Checks if device credentials are valid without creating a session.
+ * @request ValidateDeviceConnectionRequest
+ * @response ApiResponse<{ valid: boolean; message: string; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Device Heartbeat ==
+ * @method POST
+ * @path /api/v1/device/heartbeat
+ * @description Sent periodically by a connected device to keep its session active. Requires 'auth:sanctum' token.
+ * @request (empty)
+ * @response ApiResponse<{ timestamp: string; next_heartbeat_in: number; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Get Device Status ==
+ * @method GET
+ * @path /api/v1/device/status
+ * @description Retrieves the full status and data for the currently authenticated device. Requires 'auth:sanctum' token.
+ * @request (empty)
+ * @response DeviceResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Disconnect Device ==
+ * @method POST
+ * @path /api/v1/device/disconnect
+ * @description Disconnects the currently authenticated device and revokes its token. Requires 'auth:sanctum' token.
+ * @request (empty)
+ * @response ApiResponse<{ message: string; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Get Device Configuration ==
+ * @method GET
+ * @path /api/v1/device/config
+ * @description Retrieves the configuration for the currently authenticated device. Requires 'auth:sanctum' token.
+ * @request (empty)
+ * @response ApiResponse<{ device_config: object; ... }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Update Device Configuration ==
+ * @method PUT
+ * @path /api/v1/device/config
+ * @description Updates the configuration for the currently authenticated device. Requires 'auth:sanctum' token.
+ * @request UpdateDeviceConfigRequest
+ * @response ApiResponse<{ configuration: object; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: List All Devices ==
+ * @method GET
+ * @path /api/v1/devices
+ * @description (Admin) Retrieves a paginated list of all devices. Supports filtering. Requires admin role.
+ * @request (Query Params: company_uuid, device_type, status, search, per_page, etc.)
+ * @response DeviceListResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Create New Device ==
+ * @method POST
+ * @path /api/v1/devices
+ * @description (Admin) Creates a new device. Requires admin role.
+ * @request CreateDeviceRequest
+ * @response DeviceResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Get Device Details ==
+ * @method GET
+ * @path /api/v1/devices/{device_uuid}
+ * @description (Admin) Retrieves details for a specific device. Requires admin role.
+ * @request (none)
+ * @response DeviceResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Update Device ==
+ * @method PUT
+ * @path /api/v1/devices/{device_uuid}
+ * @description (Admin) Updates a specific device. Requires admin role.
+ * @request Partial<CreateDeviceRequest>
+ * @response DeviceResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Delete Device ==
+ * @method DELETE
+ * @path /api/v1/devices/{device_uuid}
+ * @description (Admin) Deletes a specific device. Requires admin role.
+ * @request (none)
+ * @response ApiResponse<{ message: string; }> | ApiErrorResponse
+ */
+
+// -------------------------------------------------------------------------------------------------
+// B. Tablet Specific API (/api/v1/tablet/*, /api/v1/table/*)
+// -------------------------------------------------------------------------------------------------
+
+/**
+ * == Endpoint: Tablet Connection ==
+ * @method POST
+ * @path /api/v1/tablet/connect
+ * @description Authenticates a tablet device and returns a session token.
+ * @request ConnectTabletRequest
+ * @response ConnectTabletResponse | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Validate Tablet Connection ==
+ * @method POST
+ * @path /api/v1/tablet/validate
+ * @description Checks if tablet credentials are valid without creating a session.
+ * @request ValidateTabletConnectionRequest
+ * @response ApiResponse<{ valid: boolean; message: string; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Assign Tablet to Table ==
+ * @method POST
+ * @path /api/v1/table/assign
+ * @description Assigns the currently authenticated tablet to a specific restaurant table. Requires 'auth:sanctum' token.
+ * @request { table_uuid: string; }
+ * @response ApiResponse<{ message: string; }> | ApiErrorResponse
+ */
+
+/**
+ * == Endpoint: Generate Customer QR Code ==
+ * @method GET
+ * @path /api/v1/tablet/qr/generate
+ * @description Generates a QR code for customers to use, linked to the tablet's assigned table. Requires 'auth:sanctum' token.
+ * @request (none)
+ * @response ApiResponse<{ qr_data: object; }> | ApiErrorResponse
+ */
+
+// -------------------------------------------------------------------------------------------------
+// C. Admin Tablet API (/api/v1/admin/tablets/*)
+// -------------------------------------------------------------------------------------------------
+/**
+ * Note: The controllers for these endpoints appear to be placeholders.
+ * The request and response payloads are not yet defined in the backend.
+ */
+
+/**
+ * == Endpoint: Get Tablet Config ==
+ * @method GET
+ * @path /api/v1/admin/tablets/config/general
+ * @description (Admin) Gets the general configuration for tablets.
+ */
+
+/**
+ * == Endpoint: Update Tablet Config ==
+ * @method PUT
+ * @path /api/v1/admin/tablets/config/general
+ * @description (Admin) Updates the general configuration for tablets.
+ */
+
+/**
+ * == Endpoint: List Admin Tablets ==
+ * @method GET
+ * @path /api/v1/admin/tablets-management
+ * @description (Admin) Lists tablets for management purposes.
+ */
