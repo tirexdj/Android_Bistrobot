@@ -47,5 +47,14 @@ class PreferencesHelperImpl constructor(context: Context) : PreferenceHelper {
         mPrefs.edit().remove(Constants.IS_INTRO_SCREEN_DONE).apply()
         mPrefs.edit().remove(Constants.LANGUAGE).apply()
         mPrefs.edit().remove(Constants.LANGUAGE_CODE).apply()
+        mPrefs.edit().remove(Constants.AUTH_TOKEN).apply()
+    }
+
+    override fun setAuthToken(authToken: String) {
+        mPrefs.edit().putString(Constants.AUTH_TOKEN, authToken).apply()
+    }
+
+    override fun getAuthToken(): String {
+        return mPrefs.getString(Constants.AUTH_TOKEN, "").toString()
     }
 }

@@ -19,7 +19,11 @@ object ValidationConstants {
         ValidationStatus.EMPTY_CONFIRM_PASSWORD to R.string.empty_confirm_password,
         ValidationStatus.MISMATCHED_PASSWORDS to R.string.password_not_match,
         ValidationStatus.EMPTY_HOME_ADDRESS to R.string.empty_home_address,
-        ValidationStatus.EMPTY_OFFICE_ADDRESS to R.string.empty_home_address,
+        ValidationStatus.EMPTY_OFFICE_ADDRESS to R.string.empty_office_address,
 
+        // For tablet login
+        ValidationStatus.EMPTY_RESTAURANT_CODE to R.string.please_enter_restaurant_code,
+        ValidationStatus.EMPTY_IDENTIFIER to R.string.please_enter_identifier,
+        ValidationStatus.EMPTY_PIN to R.string.please_enter_pin,
         )
 }

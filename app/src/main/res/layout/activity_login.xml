@@ -55,7 +55,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/headerWelcomeText" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/emailTextInput"
+                    android:id="@+id/restaurantCodeTextInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_30"
@@ -68,18 +68,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/headerDesc">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailET"
+                        android:id="@+id/restaurantCodeET"
                         style="@style/editTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         android:background="@drawable/edit_text_view_bg"
-                        android:hint="@string/email_or_username"
-                        android:inputType="textEmailAddress"
+                        android:hint="@string/restaurant_code"
+                        android:inputType="text"
                         android:padding="@dimen/dp_10" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/passwordTextInput"
+                    android:id="@+id/identifierTextInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
@@ -89,76 +89,56 @@
                     app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/emailTextInput"
+                    app:layout_constraintTop_toBottomOf="@+id/restaurantCodeTextInput">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/identifierET"
+                        style="@style/editTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_60"
+                        android:background="@drawable/edit_text_view_bg"
+                        android:hint="@string/identifier"
+                        android:inputType="text"
+                        android:padding="@dimen/dp_10" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/pinCodeTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:errorIconDrawable="@null"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/identifierTextInput"
                     app:passwordToggleDrawable="@drawable/show_hide_password_selector"
                     app:passwordToggleEnabled="true"
                     app:passwordToggleTint="@color/white">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passwordET"
+                        android:id="@+id/pinCodeET"
                         style="@style/editTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_60"
                         android:background="@drawable/edit_text_view_bg"
-                        android:hint="@string/password"
+                        android:hint="@string/pin_code"
                         android:inputType="textPassword"
                         android:padding="@dimen/dp_10" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/forgotPassword"
-                    style="@style/yellowText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:gravity="end"
-                    android:text="@string/forgot_password"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/passwordTextInput" />
-
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/login"
+                    android:id="@+id/loginBtn"
                     style="@style/yellowBtnStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_60"
                     android:layout_marginTop="@dimen/dp_30"
                     android:onClick="@{() -> viewModel.onLoginClicked()}"
                     android:text="@string/login_button_text"
-                    app:layout_constraintTop_toBottomOf="@id/forgotPassword" />
+                    app:layout_constraintTop_toBottomOf="@id/pinCodeTextInput" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/dontHaveAccountText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    android:text="@string/dont_have_an_account"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14"
-                    app:layout_constraintEnd_toStartOf="@+id/signUpTV"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/login" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/signUpTV"
-                    style="@style/yellowText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
-                    android:text="@string/sign_up_text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dontHaveAccountText"
-                    app:layout_constraintTop_toBottomOf="@+id/login" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_40"
-                    android:layout_marginTop="@dimen/dp_40"
-                    android:src="@drawable/img_app_logo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dontHaveAccountText" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </LinearLayout>
