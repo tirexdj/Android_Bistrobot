@@ -18,6 +18,7 @@ object NetworkModule {
 
     private const val BASE_URL = "https://api.bistrobot.com/"
 
+
     @Singleton
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
