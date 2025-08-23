@@ -46,4 +46,16 @@ interface PreferenceHelper {
     Clears all the stored preferences.
      */
     fun clear()
+
+    /**
+    Sets the auth token.
+    @param authToken The auth token to be set.
+     */
+    fun setAuthToken(authToken: String)
+
+    /**
+    Retrieves the auth token.
+    @return The auth token.
+     */
+    fun getAuthToken(): String
 }

@@ -8,11 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val apiService: ApiService) :
+class LoginViewModel @Inject constructor() :
     BaseViewModel<LoginNavigator>() {
 
-    var emailValidationStatus = MutableLiveData<ValidationStatus>()
-    var passwordValidationStatus = MutableLiveData<ValidationStatus>()
+    var restaurantCodeValidationStatus = MutableLiveData<ValidationStatus>()
+    var identifierValidationStatus = MutableLiveData<ValidationStatus>()
+    var pinCodeValidationStatus = MutableLiveData<ValidationStatus>()
 
     fun onLoginClicked() {
         getNavigator()!!.login()

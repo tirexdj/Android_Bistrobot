@@ -261,3 +261,24 @@ fun hideKeyboard(context: Context, view: View) {
         context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
+
+fun validateRestaurantCode(code: String?): ValidationStatus {
+    return when {
+        code.isNullOrEmpty() -> ValidationStatus.EMPTY_RESTAURANT_CODE
+        else -> ValidationStatus.VALID
+    }
+}
+
+fun validateIdentifier(identifier: String?): ValidationStatus {
+    return when {
+        identifier.isNullOrEmpty() -> ValidationStatus.EMPTY_IDENTIFIER
+        else -> ValidationStatus.VALID
+    }
+}
+
+fun validatePin(pin: String?): ValidationStatus {
+    return when {
+        pin.isNullOrEmpty() -> ValidationStatus.EMPTY_PIN
+        else -> ValidationStatus.VALID
+    }
+}
